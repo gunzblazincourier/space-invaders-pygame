@@ -24,6 +24,6 @@ while running:
     screen.fill((0, 0, 0))
     screen.blit(player, (player_pos.x, player_pos.y))
     pygame.display.flip()
-    dt = clock.tick(60) / 1000
+    dt = clock.tick(144) / 1000
 
 pygame.quit()
