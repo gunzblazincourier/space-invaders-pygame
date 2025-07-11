@@ -15,8 +15,8 @@ bullet_shot = False
 spritesheet = pygame.image.load('sheet.png').convert()
 player = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT)).convert()
 player.blit(spritesheet, (0, 0), (3, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
-player_position = pygame.Vector2(128, 180)
-gun_position = pygame.Vector2(134, 180)
+player_position = pygame.Vector2(128, 185)
+gun_position = pygame.Vector2(134, 185)
 
 bullet = pygame.Surface((BULLET_WIDTH, BULLET_HEIGHT)).convert()
 bullet.blit(spritesheet, (0, 0), (55, 53, BULLET_WIDTH, BULLET_HEIGHT))
@@ -49,7 +49,7 @@ while running:
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
     SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
-    #pygame.draw.line(SCREEN, (255, 255, 255), (0, 100), (1000, 100))
+    pygame.draw.line(SCREEN, (255, 255, 255), (30, 210), (220, 210))
     pygame.display.flip()
 
 pygame.quit()
