@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+SCREEN = pygame.display.set_mode((256, 224), pygame.SCALED | pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 running = True
 
@@ -15,13 +15,11 @@ bullet_shot = False
 spritesheet = pygame.image.load('sheet.png').convert()
 player = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT)).convert()
 player.blit(spritesheet, (0, 0), (3, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
-player = pygame.transform.scale_by(player, 5)
-player_position = pygame.Vector2(640, 600)
-gun_position = pygame.Vector2(672, 600)
+player_position = pygame.Vector2(128, 180)
+gun_position = pygame.Vector2(134, 180)
 
 bullet = pygame.Surface((BULLET_WIDTH, BULLET_HEIGHT)).convert()
 bullet.blit(spritesheet, (0, 0), (55, 53, BULLET_WIDTH, BULLET_HEIGHT))
-bullet = pygame.transform.scale_by(bullet, 2)
 bullet_position = gun_position
 
 while running:
@@ -35,22 +33,23 @@ while running:
         bullet_position = pygame.Vector2(gun_position.x, gun_position.y)
         bullet_shot = True
     if keys[pygame.K_LEFT]:
-        player_position.x -= 300 * dt
-        gun_position.x -= 300 * dt
+        player_position.x -= 100 * dt
+        gun_position.x -= 100 * dt
     elif keys[pygame.K_RIGHT]:
-        player_position.x += 300 * dt
-        gun_position.x += 300 * dt
+        player_position.x += 100 * dt
+        gun_position.x += 100 * dt
 
     if bullet_position.y < 0:
         bullet_shot = False
         bullet_position = gun_position
 
     if bullet_shot == True:
-        bullet_position.y -= 500 * dt
+        bullet_position.y -= 200 * dt
 
-    screen.fill((0, 0, 0))
-    screen.blit(player, (player_position.x, player_position.y))
-    screen.blit(bullet, (bullet_position.x, bullet_position.y))
+    SCREEN.fill((0, 0, 0))
+    SCREEN.blit(player, (player_position.x, player_position.y))
+    SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
+    #pygame.draw.line(SCREEN, (255, 255, 255), (0, 100), (1000, 100))
     pygame.display.flip()
 
 pygame.quit()
