@@ -12,6 +12,8 @@ BULLET_WIDTH = 1
 BULLET_HEIGHT = 4
 bullet_shot = False
 
+linebreak_list = []
+
 spritesheet = pygame.image.load('sheet.png').convert()
 player = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT)).convert()
 player.blit(spritesheet, (0, 0), (3, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -31,6 +33,7 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE] and bullet_shot == False:
         bullet_position = pygame.Vector2(gun_position.x, gun_position.y)
+        linebreak_list.append(int(bullet_position.x))
         bullet_shot = True
     if keys[pygame.K_LEFT]:
         player_position.x -= 100 * dt
@@ -49,7 +52,12 @@ while running:
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
     SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
-    pygame.draw.line(SCREEN, (255, 255, 255), (30, 210), (220, 210))
+
+    for i in range(30, 220):
+        if i in linebreak_list:
+            continue
+        pygame.draw.line(SCREEN, (255, 255, 255), (i, 210), (i, 210))
+    #pygame.draw.line(SCREEN, (255, 255, 255), (30, 210), (220, 210))
     pygame.display.flip()
 
 pygame.quit()
