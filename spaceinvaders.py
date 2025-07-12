@@ -34,10 +34,10 @@ while running:
     if keys[pygame.K_SPACE] and bullet_shot == False:
         bullet_position = pygame.Vector2(gun_position.x, gun_position.y)
         bullet_shot = True
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_LEFT] and player_position.x > 30:
         player_position.x -= 100 * dt
         gun_position.x -= 100 * dt
-    elif keys[pygame.K_RIGHT]:
+    elif keys[pygame.K_RIGHT] and player_position.x < 220:
         player_position.x += 100 * dt
         gun_position.x += 100 * dt
 
@@ -53,7 +53,7 @@ while running:
     SCREEN.blit(player, (player_position.x, player_position.y))
     SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
 
-    for i in range(30, 220):
+    for i in range(28, 230):
         if i in linebreak_list:
             continue
         pygame.draw.line(SCREEN, (255, 255, 255), (i, 15), (i, 15))
