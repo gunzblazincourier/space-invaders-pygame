@@ -33,7 +33,6 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE] and bullet_shot == False:
         bullet_position = pygame.Vector2(gun_position.x, gun_position.y)
-        linebreak_list.append(int(bullet_position.x))
         bullet_shot = True
     if keys[pygame.K_LEFT]:
         player_position.x -= 100 * dt
@@ -42,8 +41,9 @@ while running:
         player_position.x += 100 * dt
         gun_position.x += 100 * dt
 
-    if bullet_position.y < 0:
+    if bullet_position.y < 15:
         bullet_shot = False
+        linebreak_list.append(int(bullet_position.x))
         bullet_position = gun_position
 
     if bullet_shot == True:
@@ -56,7 +56,7 @@ while running:
     for i in range(30, 220):
         if i in linebreak_list:
             continue
-        pygame.draw.line(SCREEN, (255, 255, 255), (i, 210), (i, 210))
+        pygame.draw.line(SCREEN, (255, 255, 255), (i, 15), (i, 15))
     #pygame.draw.line(SCREEN, (255, 255, 255), (30, 210), (220, 210))
     pygame.display.flip()
 
