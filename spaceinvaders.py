@@ -82,10 +82,23 @@ while running:
                     enemy_list[j][i].blit(spritesheet, (0, 0), (55, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
                 else:
                     enemy_timer_list[j][i] = 0
-            elif int(pygame.time.get_ticks() / 1000) % 2 == 0:
-                enemy_list[j][i].blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
-            elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
-                enemy_list[j][i].blit(spritesheet, (0, 0), (1, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
+            else:
+                if i == 0:
+                    if int(pygame.time.get_ticks() / 1000) % 2 == 0:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+                    elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (1, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
+                elif i == 1 or i == 2:
+                    if int(pygame.time.get_ticks() / 1000) % 2 == 0:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (19, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+                    elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (19, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
+                else:
+                    if int(pygame.time.get_ticks() / 1000) % 2 == 0:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (37, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+                    elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
+                        enemy_list[j][i].blit(spritesheet, (0, 0), (37, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
+
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
     for i in range(enemy_columns):
