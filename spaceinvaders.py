@@ -15,13 +15,13 @@ enemy_rows, enemy_columns = (11, 5)
 enemy_positions_list =  [[player_position for _ in range(enemy_columns)] for _ in range(enemy_rows)]
 enemy_check_list = [[False for _ in range(enemy_columns)] for _ in range(enemy_rows)]
 enemy_timer_list = [[1.00 for _ in range(enemy_columns)] for _ in range(enemy_rows)]
-enemy_position_x = 50
+enemy_position_x = 40
 enemy_position_y = 60
 for i in range(enemy_columns):
     for j in range(enemy_rows):
         enemy_positions_list[j][i] = pygame.Vector2(enemy_position_x, enemy_position_y)
-        enemy_position_x += 14
-    enemy_position_x = 50
+        enemy_position_x += 16
+    enemy_position_x = 40
     enemy_position_y += 15
 print(enemy_positions_list)
 
