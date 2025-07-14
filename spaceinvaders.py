@@ -12,7 +12,9 @@ player.blit(spritesheet, (0, 0), (1, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
 player_position = pygame.Vector2(128, 200)
 
 enemy_rows, enemy_columns = (11, 5)
-enemy_positions_list =  [[player_position for i in range(enemy_columns)] for j in range(enemy_rows)]
+enemy_positions_list =  [[player_position for _ in range(enemy_columns)] for _ in range(enemy_rows)]
+enemy_check_list = [[False for _ in range(enemy_columns)] for _ in range(enemy_rows)]
+enemy_timer_list = [[1.00 for _ in range(enemy_columns)] for _ in range(enemy_rows)]
 enemy_position_x = 50
 enemy_position_y = 70
 for i in range(enemy_columns):
@@ -39,6 +41,9 @@ bullet.blit(spritesheet, (0, 0), (55, 53, BULLET_WIDTH, BULLET_HEIGHT))
 gun_position = pygame.Vector2(136, 200)
 bullet_position = gun_position
 
+sound_shoot = pygame.mixer.Sound('shoot.wav')
+channel_shoot = pygame.mixer.Channel(1)
+
 linebreak_list = []
 bullet_shot = False
 running = True
@@ -52,6 +57,7 @@ while running:
     if keys[pygame.K_SPACE] and bullet_shot == False:
         bullet_position = pygame.Vector2(gun_position.x, gun_position.y)
         bullet_shot = True
+        channel_shoot.play(sound_shoot)
     if keys[pygame.K_LEFT] and player_position.x > 30:
         player_position.x -= 100 * dt
         gun_position.x -= 100 * dt
@@ -62,22 +68,36 @@ while running:
     if bullet_position.y < 15:
         bullet_shot = False
         linebreak_list.append(int(bullet_position.x))
-        bullet_position = gun_position
 
     if bullet_shot:
         bullet_position.y -= 200 * dt
+    else:
+        bullet_position = gun_position
 
     for i in range(enemy_columns):
         for j in range(enemy_rows):
-            if int(pygame.time.get_ticks() / 1000) % 2 == 0:
+            if enemy_check_list[j][i]:
+                if enemy_timer_list[j][i] > 0:
+                    enemy_timer_list[j][i] -= 5 * dt
+                    enemy_list[j][i].blit(spritesheet, (0, 0), (55, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+                else:
+                    enemy_timer_list[j][i] = 0
+            elif int(pygame.time.get_ticks() / 1000) % 2 == 0:
                 enemy_list[j][i].blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
             elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
-                enemy_list[j][i].blit(spritesheet, (0, 0), (1, enemy_rows, ENEMY_WIDTH, ENEMY_HEIGHT))
+                enemy_list[j][i].blit(spritesheet, (0, 0), (1, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
     for i in range(enemy_columns):
         for j in range(enemy_rows):
-            SCREEN.blit(enemy_list[j][i], (enemy_positions_list[j][i].x, enemy_positions_list[j][i].y))
+            if bullet_shot == True and enemy_check_list[j][i] == False:
+                if (enemy_positions_list[j][i].x + 3 < bullet_position.x <
+                        enemy_positions_list[j][i].x + ENEMY_WIDTH - 3) and \
+                        bullet_position.y < enemy_positions_list[j][i].y + ENEMY_HEIGHT:
+                    enemy_check_list[j][i] = True
+                    bullet_shot = False
+            if enemy_timer_list[j][i] > 0:
+                SCREEN.blit(enemy_list[j][i], (enemy_positions_list[j][i].x, enemy_positions_list[j][i].y))
     SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
 
     for i in range(28, 230):
