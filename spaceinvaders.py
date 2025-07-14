@@ -18,10 +18,10 @@ bullet_shot = False
 linebreak_list = []
 enemy_list = []
 enemy_positions_list = []
-enemy_position_x = 30
+enemy_position_x = 50
 for i in range(11):
-    enemy_positions_list.append(pygame.Vector2(enemy_position_x, 100))
-    enemy_position_x += 18
+    enemy_positions_list.append(pygame.Vector2(enemy_position_x, 70))
+    enemy_position_x += 14
 print(enemy_positions_list)
 
 spritesheet = pygame.image.load('sheet.png').convert()
