@@ -16,19 +16,27 @@ BULLET_HEIGHT = 4
 bullet_shot = False
 
 linebreak_list = []
+enemy_list = []
+enemy_positions_list = []
+enemy_position_x = 30
+for i in range(11):
+    enemy_positions_list.append(pygame.Vector2(enemy_position_x, 100))
+    enemy_position_x += 18
+print(enemy_positions_list)
 
 spritesheet = pygame.image.load('sheet.png').convert()
 player = pygame.Surface((PLAYER_WIDTH, PLAYER_HEIGHT)).convert()
 player.blit(spritesheet, (0, 0), (1, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
-player_position = pygame.Vector2(128, 185)
+player_position = pygame.Vector2(128, 200)
 
-enemy = pygame.Surface((ENEMY_WIDTH, ENEMY_HEIGHT)).convert()
-enemy.blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
-enemy_position = pygame.Vector2(100, 100)
+for i in range(11):
+    enemy = pygame.Surface((ENEMY_WIDTH, ENEMY_HEIGHT)).convert()
+    #enemy.blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+    enemy_list.append(enemy)
 
 bullet = pygame.Surface((BULLET_WIDTH, BULLET_HEIGHT)).convert()
 bullet.blit(spritesheet, (0, 0), (55, 53, BULLET_WIDTH, BULLET_HEIGHT))
-gun_position = pygame.Vector2(136, 185)
+gun_position = pygame.Vector2(136, 200)
 bullet_position = gun_position
 
 while running:
@@ -56,9 +64,15 @@ while running:
     if bullet_shot:
         bullet_position.y -= 200 * dt
 
+    for x in enemy_list:
+        if int(pygame.time.get_ticks() / 1000) % 2 == 0:
+            x.blit(spritesheet, (0, 0), (1, 1, ENEMY_WIDTH, ENEMY_HEIGHT))
+        elif int(pygame.time.get_ticks() / 1000) % 2 == 1:
+            x.blit(spritesheet, (0, 0), (1, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
-    SCREEN.blit(enemy, (enemy_position.x, enemy_position.y))
+    for i in range(11):
+        SCREEN.blit(enemy_list[i], (enemy_positions_list[i].x, enemy_positions_list[i].y))
     SCREEN.blit(bullet, (bullet_position.x, bullet_position.y))
 
     for i in range(28, 230):
