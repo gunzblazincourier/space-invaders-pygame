@@ -35,11 +35,6 @@ for i in range(ENEMY_ROWS):
     enemy_position_x = 40
     enemy_position_y += 15
 
-# Row and column of the last enemy in the list when traversed column-by-column instead of the normal row-by-row looping
-# (default is for bottom-rightmost enemy)
-last_enemy_row = ENEMY_ROWS - 1
-last_enemy_column = ENEMY_COLUMNS - 1
-
 ENEMY_WIDTH = 16
 ENEMY_HEIGHT = 8
 enemy_list = [[player for _ in range(ENEMY_COLUMNS)] for _ in range(ENEMY_ROWS)]
@@ -57,6 +52,13 @@ bullet_position = gun_position  # 'Stores' bullet in gun of spaceship by default
 
 sound_shoot = pygame.mixer.Sound('shoot.wav')
 channel_shoot = pygame.mixer.Channel(1)
+
+# Row and column of the last enemy in the list when traversed column-by-column instead of the normal row-by-row looping
+# left-to-right list traversal for right travel direction, and right-to-left traversal for left direction
+# (default is for bottom-rightmost enemy)
+last_enemy_row = ENEMY_ROWS - 1
+last_enemy_column = ENEMY_COLUMNS - 1
+enemy_position_y = 0
 
 linebreak_list = [] # Line is broken at which locations
 bullet_shot = False
@@ -92,6 +94,60 @@ while game_running:
     else:
         bullet_position = gun_position  #  Bullet respawns at gun_position
 
+    # Updates coordinates of the last enemy when an enemy is killed, based on the direction of travel
+    # print(last_enemy_row, last_enemy_column)
+    if enemy_direction:
+        for j in range(ENEMY_COLUMNS):
+            for i in range(ENEMY_ROWS):
+                if not enemy_death_list[i][j]:
+                    last_enemy_row = i
+                    last_enemy_column = j
+    else:
+        for j in range(ENEMY_COLUMNS - 1, -1, -1):
+            for i in range(ENEMY_ROWS):
+                if not enemy_death_list[i][j]:
+                    last_enemy_row = i
+                    last_enemy_column = j
+
+    if enemy_direction:
+        for j in range(ENEMY_COLUMNS):
+            for i in range(ENEMY_ROWS):
+                if previous_second != current_second:  # Means if one second has passed
+                    if enemy_positions_list[last_enemy_row][last_enemy_column].x < 210:
+                        enemy_positions_list[i][j].x += 3
+                    else:
+                        print(enemy_position_y, enemy_positions_list[last_enemy_row][last_enemy_column].y)
+                        if enemy_position_y != enemy_positions_list[last_enemy_row][last_enemy_column].y:
+                            enemy_positions_list[i][j].x += 3
+                            if (i == last_enemy_row) and (j == last_enemy_column):
+                                enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+                        else:
+                            enemy_positions_list[i][j].y += 3
+                            enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+                            if (i == last_enemy_row) and (j == last_enemy_column):
+                                enemy_direction = False
+                                enemy_position_y -= 2
+    else:
+        for j in range(ENEMY_COLUMNS - 1, -1, -1):
+            for i in range(ENEMY_ROWS):
+                if previous_second != current_second:  # Means if one second has passed
+                    if enemy_positions_list[last_enemy_row][last_enemy_column].x > 40:
+                        enemy_positions_list[i][j].x -= 3
+                    else:
+                        print(enemy_position_y, enemy_positions_list[last_enemy_row][last_enemy_column].y)
+                        if enemy_position_y != enemy_positions_list[last_enemy_row][last_enemy_column].y:
+                            enemy_positions_list[i][j].x -= 3
+                            if (i == last_enemy_row) and (j == last_enemy_column):
+                                enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+                        else:
+                            enemy_positions_list[i][j].y += 3
+                            enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+                            if (i == last_enemy_row) and (j == last_enemy_column):
+                                enemy_direction = True
+                                enemy_position_y -= 2
+
+
+
     for i in range(ENEMY_ROWS):
         for j in range(ENEMY_COLUMNS):
             if enemy_death_list[i][j]:
@@ -101,23 +157,33 @@ while game_running:
                 else:
                     enemy_timer_list[i][j] = 0  # Death animation finished, enemy removed
             else:
-                if previous_second != current_second: # Means if one second has passed
-                    #print(enemy_positions_list)
-                    if enemy_direction:
-                        if enemy_positions_list[ENEMY_ROWS-1][ENEMY_COLUMNS-1].x < 220:
-                            enemy_positions_list[i][j].x += 3
-                        else:
-                            enemy_positions_list[i][j].y += 3
-                            if (i == ENEMY_ROWS-1) and (j == ENEMY_COLUMNS-1):
-                                enemy_direction = False
-                    else:
-                        #print(enemy_positions_list[0][ENEMY_ROWS-1])
-                        if enemy_positions_list[ENEMY_ROWS-1][ENEMY_COLUMNS-1].x > 185:
-                            enemy_positions_list[i][j].x -= 3
-                        else:
-                            enemy_positions_list[i][j].y += 3
-                            if (i == ENEMY_ROWS-1) and (j == ENEMY_COLUMNS-1):
-                                enemy_direction = True
+            #     if previous_second != current_second: # Means if one second has passed
+            #         if enemy_direction:
+            #             if enemy_positions_list[last_enemy_row][last_enemy_column].x < 220:
+            #                 enemy_positions_list[i][j].x += 3
+            #             else:
+            #                 if enemy_position_y != enemy_positions_list[last_enemy_row][last_enemy_column].y:
+            #                     enemy_positions_list[i][j].x += 3
+            #                     if (i == ENEMY_ROWS-1) and (j == ENEMY_COLUMNS-1):
+            #                         enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+            #                 else:
+            #                     enemy_positions_list[i][j].y += 3
+            #                     if (i == ENEMY_ROWS-1) and (j == ENEMY_COLUMNS-1):
+            #                         enemy_direction = False
+            #                         enemy_position_y -= 2
+            #         else:
+            #             if enemy_positions_list[last_enemy_row][last_enemy_column].x > 40:
+            #                 enemy_positions_list[i][j].x -= 3
+            #             else:
+            #                 if enemy_position_y != enemy_positions_list[last_enemy_row][last_enemy_column].y:
+            #                     enemy_positions_list[i][j].x -= 3
+            #                     if (i == ENEMY_ROWS - 1) and (j == ENEMY_COLUMNS - 1):
+            #                         enemy_position_y = enemy_positions_list[last_enemy_row][last_enemy_column].y
+            #                 else:
+            #                     enemy_positions_list[i][j].y += 3
+            #                     if (i == ENEMY_ROWS - 1) and (j == ENEMY_COLUMNS - 1):
+            #                         enemy_direction = True
+            #                         enemy_position_y -= 2
 
                 # Animate enemies
                 if i == 0:
@@ -136,11 +202,6 @@ while game_running:
                     elif current_second % 2 == 1:
                         enemy_list[i][j].blit(spritesheet, (0, 0), (37, 11, ENEMY_WIDTH, ENEMY_HEIGHT))
     previous_second = current_second
-    # if enemy_positions_list[ENEMY_ROWS-1][ENEMY_COLUMNS-1].x >= 220 or enemy_positions_list[ENEMY_ROWS-1][ENEMY_COLUMNS-1].x <= 190:
-    #     if enemy_direction:
-    #         enemy_direction = False
-    #     else:
-    #         enemy_direction = True
 
     SCREEN.fill((0, 0, 0))
     SCREEN.blit(player, (player_position.x, player_position.y))
@@ -154,14 +215,6 @@ while game_running:
                     enemy_death_list[i][j] = True
                     bullet_shot = False
 
-                    # Updates coordinates of the last enemy when an enemy is killed
-                    for q in range(ENEMY_COLUMNS):
-                        for p in range(ENEMY_ROWS):
-                            if not enemy_death_list[p][q]:
-                                last_enemy_row = p
-                                last_enemy_column = q
-                    print(last_enemy_row, last_enemy_column)
-
             # Display enemy if alive
             if enemy_timer_list[i][j] > 0:
                 SCREEN.blit(enemy_list[i][j], (enemy_positions_list[i][j].x, enemy_positions_list[i][j].y))
@@ -171,7 +224,6 @@ while game_running:
         # Do not draw line at positions in linebreak_list to display destroyed areas
         if i in linebreak_list:
             continue
-        #pygame.draw.line(SCREEN, (255, 255, 255), (i, 15), (i, 15))
         # Draw line one pixel at a time
         SCREEN.set_at((i, 15), (255, 255, 255))
     pygame.display.flip()
