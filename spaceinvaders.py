@@ -1,7 +1,104 @@
-import pygame
+from fileinput import filename
 
-pygame.init()
-SCREEN = pygame.display.set_mode((256, 224), pygame.SCALED)
+import pygame
+from pygame import Surface
+
+
+def initialize_pygame_modules():
+    pygame.init()
+
+def initialize_display_window():
+    return pygame.display.set_mode((256, 224), pygame.SCALED)
+
+def create_surface(width, height):
+    return pygame.Surface((width, height)).convert()
+
+def load_image(filepath):
+    return pygame.image.load(filepath).convert()
+
+def draw_surface_on_surface(surface_top, surface_bottom, destination, area):
+    return surface_bottom.blit(surface_top, destination, area)
+
+def assign_coordinates(x, y):
+    return pygame.Vector2(x, y)
+
+def set_enemy_direction(direction):
+    return direction
+
+def set_enemy_list_dimensions(rows, columns):
+    return rows, columns
+
+def initialize_2d_list(value, rows, columns):
+    return [[value for _ in range(columns)] for _ in range(rows)]
+
+
+def assign_coordinates_to_positions_list(positions, rows, columns, x, y):
+    for i in range(rows):
+        for j in range(columns):
+            positions[i][j] = assign_coordinates(x, y)
+            x += 16
+        x = 40
+        y += 15
+    return positions
+
+def create_sound_object(filepath):
+    return pygame.mixer.Sound(filepath)
+
+def set_sound_channel(channel_number):
+    return pygame.mixer.Channel(channel_number)
+
+def create_clock():
+    return pygame.time.Clock()
+
+def set_fps(fps):
+    return clock.tick(fps)
+
+def set_delta_time(fps):
+    return set_fps(fps) / 1000
+
+def get_events_from_queue():
+    return pygame.event.get()
+
+def check_quit_event(event):
+    if event.type == pygame.QUIT:
+        return False
+    return True
+
+def get_all_keys_state():
+    return pygame.key.get_pressed()
+
+def check_key_press(keys, key):
+    return keys[key]
+
+def move_object_and_account_delta_time(object, speed, dt):
+    object += speed * dt
+    return object
+
+def play_sound_from_channel(soundpath, channel):
+    set_sound_channel(channel).play(create_sound_object(soundpath))
+
+def add_item_in_front_of_list(l, item):
+    l.append(item)
+    return l
+
+def fill_surface_with_color(surface, color):
+    surface.fill(color)
+
+def draw_coloured_pixel_on_surface(surface, position, color):
+    surface.set_at(position, color)
+
+def update_display_surface():
+    pygame.display.flip()
+
+def quit_game():
+    pygame.quit()
+
+
+
+
+
+#pygame.init()
+#SCREEN = pygame.display.set_mode((256, 224), pygame.SCALED)
 
 PLAYER_WIDTH = 16
 PLAYER_HEIGHT = 8
@@ -12,8 +109,8 @@ player.blit(spritesheet, (0, 0), (1, 49, PLAYER_WIDTH, PLAYER_HEIGHT))
 player_position = pygame.Vector2(128, 200)
 
 enemy_direction = True  #True = right; False = left
-previous_second = 0
-current_second = 0
+previous_second = 0 #No function
+current_second = 0  #No function
 ENEMY_ROWS, ENEMY_COLUMNS = (5, 11)
 
 # player_position assigned by default to set correct data type of Vector2 to values
@@ -66,7 +163,7 @@ game_running = True
 clock = pygame.time.Clock()
 while game_running:
     delta_time = clock.tick(144) / 1000
-    current_second = int(pygame.time.get_ticks() / 1000)
+    current_second = int(pygame.time.get_ticks() / 1000)    # No function
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
