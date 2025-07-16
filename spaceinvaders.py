@@ -40,6 +40,12 @@ def create_sound_object(filepath):
 def set_sound_channel(channel_number):
     return pygame.mixer.Channel(channel_number)
 
+def set_channel_volume(channel_number, volume):
+    set_sound_channel(channel_number).set_volume(volume)
+
+def play_sound_from_channel(sound_path, channel):
+    set_sound_channel(channel).play(create_sound_object(sound_path))
+
 def create_clock():
     return pygame.time.Clock()
 
@@ -66,9 +72,6 @@ def check_key_press(key):
 def move_object_and_account_delta_time(object, speed: int, dt):
     object += speed * dt
     return object
-
-def play_sound_from_channel(soundpath, channel):
-    set_sound_channel(channel).play(create_sound_object(soundpath))
 
 def add_item_in_front_of_list(l, item):
     l.append(item)
@@ -142,6 +145,7 @@ linebreak_list = [] # Line is broken at which locations
 bullet_shot = False
 game_running = True
 create_clock()
+set_channel_volume(2, 0.5)
 
 enemy_position_y = 0
 while game_running:
@@ -239,8 +243,10 @@ while game_running:
                 if i == 0:
                     if current_second % 2 == 0:
                         draw_surface_on_surface(spritesheet, enemy_list[i][j], (0, 0), (1, 1, 16, 8))
+                        play_sound_from_channel('fastinvader1.wav', 2)
                     elif current_second % 2 == 1:
                         draw_surface_on_surface(spritesheet, enemy_list[i][j], (0, 0), (1, 11, 16, 8))
+                        play_sound_from_channel('fastinvader2.wav', 2)
                 elif i == 1 or i == 2:
                     if current_second % 2 == 0:
                         draw_surface_on_surface(spritesheet, enemy_list[i][j], (0, 0), (19, 1, 16, 8))
