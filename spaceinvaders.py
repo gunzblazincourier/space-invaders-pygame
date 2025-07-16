@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-SCREEN = pygame.display.set_mode((256, 224), pygame.SCALED | pygame.FULLSCREEN)
+SCREEN = pygame.display.set_mode((256, 224), pygame.SCALED)
 
 PLAYER_WIDTH = 16
 PLAYER_HEIGHT = 8
@@ -34,6 +34,11 @@ for i in range(ENEMY_ROWS):
         enemy_position_x += 16
     enemy_position_x = 40
     enemy_position_y += 15
+
+# Row and column of the last enemy in the list when traversed column-by-column instead of the normal row-by-row looping
+# (default is for bottom-rightmost enemy)
+last_enemy_row = ENEMY_ROWS - 1
+last_enemy_column = ENEMY_COLUMNS - 1
 
 ENEMY_WIDTH = 16
 ENEMY_HEIGHT = 8
@@ -97,6 +102,7 @@ while game_running:
                     enemy_timer_list[i][j] = 0  # Death animation finished, enemy removed
             else:
                 if previous_second != current_second: # Means if one second has passed
+                    #print(enemy_positions_list)
                     if enemy_direction:
                         if enemy_positions_list[ENEMY_ROWS-1][ENEMY_COLUMNS-1].x < 220:
                             enemy_positions_list[i][j].x += 3
@@ -147,6 +153,15 @@ while game_running:
                         bullet_position.y < enemy_positions_list[i][j].y + ENEMY_HEIGHT:
                     enemy_death_list[i][j] = True
                     bullet_shot = False
+
+                    # Updates coordinates of the last enemy when an enemy is killed
+                    for q in range(ENEMY_COLUMNS):
+                        for p in range(ENEMY_ROWS):
+                            if not enemy_death_list[p][q]:
+                                last_enemy_row = p
+                                last_enemy_column = q
+                    print(last_enemy_row, last_enemy_column)
+
             # Display enemy if alive
             if enemy_timer_list[i][j] > 0:
                 SCREEN.blit(enemy_list[i][j], (enemy_positions_list[i][j].x, enemy_positions_list[i][j].y))
